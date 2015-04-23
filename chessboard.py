@@ -44,16 +44,18 @@ class BobTrial(object):
     @cherrypy.expose
     def checks(self):
         sqSize=50 # checkerboard square size in pixels
-        nSquares=8 # number of EVEN rows and columns of the checkerboard
+        nSquares=8 # number of rows and columns of the checkerboard (must be even)
         # create a black backround image
         img=Image.new('1',(nSquares*sqSize,nSquares*sqSize))
         # add white squares in checkerboard fashion
         for i in range (nSquares/2): # row pair offset
             for j in range (2): # row 2-step
                 for k in range (nSquares/2): # column step
+                # calculate the top left coordinates of each white rectangle
                     x1=(2*k+j)*sqSize
                     y1=(j+i*2)*sqSize
-                    img.paste(1,((2*k+j)*sqSize,(j+i*2)*sqSize,x1+sqSize,y1+sqSize))
+                    # paste the white rectangle into the black image
+                    img.paste(1,(x1,y1,x1+sqSize,y1+sqSize))
         cherrypy.response.headers['Content-Type'] = "image/png"
         # use StringIO to stream the image out to the browser direct from RAM
         output = StringIO.StringIO()
